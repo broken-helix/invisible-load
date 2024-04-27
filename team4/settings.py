@@ -96,10 +96,8 @@ WSGI_APPLICATION = 'team4.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': os.environ.get('HOST'),
         'NAME': os.environ.get('NAME'),
         'USER': os.environ.get('USER'),
-        'PORT': '5432',
         "PASSWORD": os.environ.get('PASSWORD'),
     }
 }
