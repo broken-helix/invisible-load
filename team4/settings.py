@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
+    'team',
+    'home',
     'household',
     'family',
 ]
@@ -58,7 +59,8 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -92,19 +94,30 @@ WSGI_APPLICATION = 'team4.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if LOCALhOST == 'True':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': os.environ.get('HOST'),
+        'NAME': os.environ.get('NAME'),
+        'USER': os.environ.get('USER'),
+        'PORT': '5432',
+        "PASSWORD": os.environ.get('PASSWORD'),
     }
-    INSTALLED_APPS.append("django_browser_reload")
-    MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
-else:
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('DJANGO_DATABASE_URL'))
-    }
+}
+
+# if LOCALhOST == 'True':
+#   DATABASES = {
+#   'default': {
+#   'ENGINE': 'django.db.backends.sqlite3',
+#   'NAME': BASE_DIR / 'db.sqlite3',
+#       }
+#   }
+#   INSTALLED_APPS.append("django_browser_reload")
+#   MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
+# else:
+#   DATABASES = {
+#   'default': dj_database_url.parse(os.environ.get('DJANGO_DATABASE_URL'))
+#   }
 
 # DATABASES = {
 #     'default': {
@@ -150,10 +163,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+# STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-llewellynksj-hackteam4-qebmxudpc8y.ws-eu110.gitpod.io'
 ]
